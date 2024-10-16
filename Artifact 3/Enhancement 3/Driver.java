@@ -32,6 +32,7 @@
 
 //import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Driver {
@@ -158,47 +159,116 @@ public class Driver {
    
     public static void intakeNewDog(Scanner scanner) { // Allows the user to add a dog to collection through input
     	try{
-    		System.out.println();
-    		System.out.println("What is the dog's name?");
-    		String name = scanner.nextLine();
-      
-    		 // Checks if true by default
+    			System.out.println();
+    			System.out.println("What is the dog's name?");
+    			String name = scanner.nextLine().trim();
+    			if (name.isEmpty()) { // Checks if anything was entered
+    				System.out.println("The dog's name can't be empty.");
+    				return;
+    			}
+  
+    			// Checks if true by default
     			if(crud.dogWasFound(name)) {
     				System.out.println("\n\nThis dog is already in our system\n\n");
     				return; //returns to menu
     			}
     				
         		System.out.println("What's the dogs breed?");
-        		String newBreed = scanner.nextLine(); // Allows the user to input breed                  
-        
+        		String newBreed = scanner.nextLine().trim(); // Allows the user to input breed
+        		if (newBreed.isEmpty()) {
+        			System.out.println("The dog's breed can't be empty.");
+        			return;
+        		}
+        		
         		System.out.println("What's the dogs gender?");
-        		String newGender = scanner.nextLine(); // Allows the user to input gender
+        		String newGender = scanner.nextLine().trim(); // Allows the user to input gender
+        		if (newGender.isEmpty()) {
+        			System.out.println("The dog's gender can't be empty.");
+        			return;
+        		}
         
         		System.out.println("What's the dogs age?");
-        		String newAge = scanner.nextLine();  // Allows the user to input age               
-        
+        		String newAge = scanner.nextLine().trim();  // Allows the user to input age
+        		
+        		try {
+        			int age = Integer.parseInt(newAge);
+        			if (newAge.isEmpty()) {
+        				System.out.println("The dog's age can't be empty.");
+        				return;
+        			}
+        			else if (age < 0) { // Ensures the dogs age is valid
+        				System.out.println("The dog's age can't be negative.");
+        				return;
+        			}
+        		}catch(NumberFormatException e) { // Catches the user if a number isnt entered
+        			System.out.println("Invalid entry for dog's age, the dog's age must be an integer.");
+        			return;
+        			}
+        		
         		System.out.println("What's the dogs weight?");
-        		String newWeight = scanner.nextLine(); // Allows the user to input weight                  
-        
+        		String newWeight = scanner.nextLine().trim(); // Allows the user to input weight
+        		
+        		try {
+        			Double weight = Double.parseDouble(newWeight);
+        			if (newWeight.isEmpty()) {
+        				System.out.println("The dog's weight can't be empty.");
+        				return;
+        			}
+        			else if (weight < 0 ) {
+        				System.out.println("The dog's weight can't be negative.");
+        				return;
+        			}
+        		}catch(NumberFormatException e) {
+        			System.out.println("Invalid entry, the dogs weight must be a number");
+        			return;
+        			}
+        		
         		System.out.println("What's the dogs acquisition date?");
-        		String newaqcuisitionDate = scanner.nextLine();  // Allows the user to input date                
+        		String newaqcuisitionDate = scanner.nextLine().trim();  // Allows the user to input date
+        		if (newaqcuisitionDate.isEmpty()) {
+        			System.out.println("The dog's acquisition date can't be empty.");
+        			return;
+        		}
+        		else if (!newaqcuisitionDate.matches("\\d{2}-\\d{2}-\\d{4}")) {
+        			System.out.println("Invalid date entry, please make sure data format is in MM-DD-YYYY");
+        			return;
+        		}
         
         		System.out.println("What's the dogs acquisition country ?");
-        		String newaqcuisitionCountry = scanner.nextLine();  // Allows the user to input acquisition country                
+        		String newaqcuisitionCountry = scanner.nextLine().trim();  // Allows the user to input acquisition country
+        		if (newaqcuisitionCountry.isEmpty()) {
+        			System.out.println("The dog's acquisition country can't be empty.");
+        			return;
+        		}
         
         		System.out.println("What's the dogs training status?");
-        		String newtrainingStatus = scanner.nextLine(); // Allows the user to input training status
+        		String newtrainingStatus = scanner.nextLine().trim(); // Allows the user to input training status
+        		if (newtrainingStatus.isEmpty()) {
+        			System.out.println("The dog's training status can't be empty.");
+        			return;
+        		}
                          
         		System.out.println("True or false is the dog reserved?");
-        		Boolean newreservationStatus = scanner.nextBoolean(); // Allows the user to input reservation status
-        		scanner.nextLine();
-        
+        			Boolean newreservationStatus = null;
+        			try{
+        				newreservationStatus = scanner.nextBoolean(); // Allows the user to input reservation status
+        				scanner.nextLine();
+        			   } catch(InputMismatchException e) {
+        				   System.out.println("Invalid entry, you must enter true or false.");
+        				   scnr.nextLine();
+        				   return;
+        			   }
+        			
         		System.out.println("What's the dogs inservice country?");
-        		String newinserviceCountry = scanner.nextLine(); // Allows the user to input in-service country
+        		String newinserviceCountry = scanner.nextLine().trim(); // Allows the user to input in-service country
+        		if (newinserviceCountry.isEmpty()) {
+        			System.out.println("In-service country cannot be empty.");
+        			return;
+        		}
                     
         		// Instantiates the new dog
         		Dog newDog = new Dog (name, newBreed, newGender, newAge, newWeight, newaqcuisitionDate,newaqcuisitionCountry, 
-        					 newtrainingStatus, newreservationStatus,newinserviceCountry); 
+        					 newtrainingStatus, newreservationStatus, newinserviceCountry); 
         
         		crud.addDog(newDog); // Adds the dog to the dog collection
         			
@@ -214,9 +284,12 @@ public class Driver {
         	try {
         		System.out.println();
         		System.out.println("What is the monkey's name?");
-        		String name = scanner.nextLine(); // Allows the user to enter the monkeys name
+        		String name = scanner.nextLine().trim(); // Allows the user to enter the monkeys name
         		
-        		
+        		if(name.isEmpty()) {
+        			System.out.println("The monkey's name can't be empty.");
+        			return;
+        		}
         		
         		// Checks if true by default
     			if(crud.monkeyWasFound(name)) {
@@ -225,7 +298,8 @@ public class Driver {
     			}
         		
                     System.out.println("What is the monkeys species?");
-                    String newSpecies = scanner.nextLine(); // Allows the user to enter a species
+                    String newSpecies = scanner.nextLine().trim(); // Allows the user to enter a species
+                    
                     	
                     // Checks if entered species is valid through speciesList comparison
                     int counter = 0;
@@ -245,38 +319,99 @@ public class Driver {
                     	}
                                                                                                     			                                                                                                               
                     	System.out.println("What's the monkeys gender?");
-                    	String newGender = scanner.nextLine(); // Allows the user to enter the monkeys name
+                    	String newGender = scanner.nextLine().trim(); // Allows the user to enter the monkeys gender
+                    	if (newGender.isEmpty()) {
+                    		System.out.println("Monkey's gender can't be empty.");
+                    		return;
+                    	}
                     
                     	System.out.println("What's the monkeys age?");
-                    	String newAge = scanner.nextLine();   // Allows the user to enter the monkeys age           
+                    	String newAge = scanner.nextLine().trim();   // Allows the user to enter the monkeys age
+                    	try {
+                    		int age = Integer.parseInt(newAge);
+                    		if(age < 0) {
+                    			System.out.println("The monkey's age can't be negative.");
+                    			return;
+                    		}
+                    	}catch(NumberFormatException e) {
+                    		System.out.println("Invalid input, the monkey's age needs to be an integer.");
+                    		return;
+                    	}
                     
                     	System.out.println("What's the monkeys weight?");
-                    	String newWeight = scanner.nextLine();  // Allows the user to enter the monkeys weight                  
+                    	String newWeight = scanner.nextLine().trim();  // Allows the user to enter the monkeys weight
+                    	try {
+                    		double weight = Double.parseDouble(newWeight);
+                    		if (weight < 0) {
+                    			System.out.println("The monkey's weight can't be negative.");
+                    			return;
+                    		}
+                    	}catch(NumberFormatException e) {
+                    		System.out.println("Invalid input, the monkeys weight needs to be a number.");
+                    		return;
+                    	}
                     
                     	System.out.println("What's the monkeys acquisition date?");
-                    	String newacquisitionDate = scanner.nextLine(); // Allows the user to enter the monkeys acquisition date               
+                    	String newacquisitionDate = scanner.nextLine().trim(); // Allows the user to enter the monkeys acquisition date
+                    	if (!newacquisitionDate.matches("\\d{2}-\\d{2}-\\d{4}")) {
+                    		System.out.println("Invalid date entry, the date format must be MM-DD-YYYY");
+                    		return;
+                    	}
+                    	
                     
                     	System.out.println("What's the monkeys acquisition country ?");
-                    	String newacquisitionCountry = scanner.nextLine();  // Allows the user to enter the monkeys acquisition country                
+                    	String newacquisitionCountry = scanner.nextLine().trim();  // Allows the user to enter the monkeys acquisition country
+                    	if (newacquisitionCountry.isEmpty()) {
+                    		System.out.println("Acquisition country can't be empty.");
+                    		return;
+                    	}
                     
                     	System.out.println("What's the monkeys training status?");
-                    	String newtrainingStatus = scanner.nextLine(); // Allows the user to enter the monkeys training status
+                    	String newtrainingStatus = scanner.nextLine().trim(); // Allows the user to enter the monkeys training status
+                    	if (newtrainingStatus.isEmpty()) {
+                    		System.out.println("The monkeys training status can't be empty.");
+                    		return;
+                    	}
                                      
                     	System.out.println("True or false is the monkey reserved?");
-                    	Boolean newreservationStatus = scanner.nextBoolean(); // Allows the user to enter the monkeys reservation status
-                    	scanner.nextLine();
+                    	Boolean newreservationStatus = null;
+                    	try {
+                    		newreservationStatus = scanner.nextBoolean(); // Allows the user to enter the monkeys reservation status
+                        	scanner.nextLine();
+                    	}catch(InputMismatchException e) {
+                    		System.out.println("Invalid entry, the monkey's reservation status must be true or false.");
+                    		return;
+                    	}
+                    	
+                    	
                     
                     	System.out.println("What's the monkeys inservice country?");
-                    	String newinserviceCountry = scanner.nextLine(); // Allows the user to enter the monkeys in-service country
+                    	String newinserviceCountry = scanner.nextLine().trim(); // Allows the user to enter the monkeys in-service country
+                    	if (newinserviceCountry.isEmpty()) {
+                    		System.out.println("The monkey's in-service country can't be empty.");
+                    		return;
+                    	}
                                       
                     	System.out.println("What's the monkeys tail length?");
-                    	String newtailLength = scanner.nextLine(); // Allows the user to enter the monkeys tail length
+                    	String newtailLength = scanner.nextLine().trim(); // Allows the user to enter the monkeys tail length
+                    	if(newtailLength.isEmpty()) {
+                    		System.out.println("The monkeys tail length can't be empty.");
+                    		return;
+                    	}
                                       
                     	System.out.println("What's the monkeys height?");
-                    	String newHeight = scanner.nextLine(); // Allows the user to enter the monkeys height
+                    	String newHeight = scanner.nextLine().trim(); // Allows the user to enter the monkeys height
+                    	if(newHeight.isEmpty()) {
+                    		System.out.println("The monkeys height can't be empty.");
+                    		return;
+                    	}
                                       
                     	System.out.println("What's the monkeys body length?");
-                    	String newbodyLength = scanner.nextLine(); // Allows the user to enter the monkeys body length
+                    	String newbodyLength = scanner.nextLine().trim(); // Allows the user to enter the monkeys body length
+                    	if(newbodyLength.isEmpty()) {
+                    		System.out.println("The monkeys body length can't be empty.");
+                    		return;
+                    	}
                             
                     		// Instantiates the monkey based on user input
                     	Monkey newMonkey = new Monkey (name, newSpecies, newGender, newAge, newWeight, newacquisitionDate, 
@@ -336,7 +471,8 @@ public class Driver {
         		} catch (Exception e) {
         			System.out.println("An error has occurred while reserving the animal....");
         	}
-        }
-	}
+        }    
+   }
+	
 
 
